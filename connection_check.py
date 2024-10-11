@@ -4,18 +4,19 @@ from tkinter import messagebox as ms
 from time import sleep
 from playsound import playsound
 import error_warning as ew
+import os
 
-def connect():
+def connect(os_info):
     try:
-        result = subprocess.run(["ping", "-n", "1", "google.com"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(["ping", os_info, "1", "google.com"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return result.returncode
     except Exception as e:
         return 1
 
-def check_connection():
+def check_connection(os_info):
     counter = 0
     while counter < 2:
-        return_value = connect()
+        return_value = connect(os_info)
         sleep(2)
         if return_value != 0:
             counter += 1
@@ -33,9 +34,18 @@ def check_connection():
     answear  = ew.Error.throw_error()
     return answear
 
+if os.name == "nt":
+    os_info = "-n"
+    shutdown = "shutdown /r /t 0"
+else:
+    os_info = "-c"
+    shutdown = "sudo "
+
 while True:
-    answear = check_connection()
+    answear = check_connection(os_info=os_info)
     sleep(2)
 
     if answear == "y":
         break
+    elif answear =="r":
+        os.system(shutdown)
