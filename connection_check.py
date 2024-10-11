@@ -39,7 +39,7 @@ if os.name == "nt":
     shutdown = "shutdown /r /t 0"
 else:
     os_info = "-c"
-    shutdown = "sudo "
+    shutdown = "sudo reboot"
 
 while True:
     answear = check_connection(os_info=os_info)
